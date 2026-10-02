@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script>(function(){try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}})();</script>
+<title>Onchain Dapps — Web3 Security Suite</title>
+<style>
+  @font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;src:url('assets/fonts/instrumentserif-400.woff2') format('woff2');font-display:swap;}
+  @font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;src:url('assets/fonts/instrumentserif-400-italic.woff2') format('woff2');font-display:swap;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;src:url('assets/fonts/inter-400.woff2') format('woff2');font-display:swap;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:500;src:url('assets/fonts/inter-500.woff2') format('woff2');font-display:swap;}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;src:url('assets/fonts/inter-600.woff2') format('woff2');font-display:swap;}
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;src:url('assets/fonts/jetbrainsmono-500.woff2') format('woff2');font-display:swap;}
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#0b0b0b;
+    --card:rgba(255,255,255,.024);
+    --card-solid:#101010;
+    --line:rgba(255,255,255,.08);
+    --line-2:rgba(255,255,255,.16);
+    --text:#f5f5f5;
+    --muted:#a3a3a3;
+    --dim:#6e6e6e;
+    --blue:#3396ff;
+    --blue-soft:rgba(51,150,255,.12);
+    --blue-line:rgba(51,150,255,.32);
+    --green:#34d399;
+    --red:#f87171;
+    --head:'Instrument Serif',Georgia,serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{font-family:var(--body);background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  ::selection{background:rgba(51,150,255,.35);color:#fff;}
+
+  .shell{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(11,11,11,.72);border-bottom:1px solid var(--line);}
+  .nav-in{max-width:1180px;margin:0 auto;padding:17px 28px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand-mark{width:36px;height:36px;border-radius:11px;background:var(--blue);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(51,150,255,.35);flex-shrink:0;}
+  .brand-mark svg{width:19px;height:19px;}
+  .brand-name{font-weight:600;font-size:1.05rem;letter-spacing:-.015em;color:var(--text);}
+  .brand-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .nav-links{display:flex;gap:34px;align-items:center;}
+  .nav-links a{font-size:.86rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s;}
+  .nav-links a:hover{color:var(--text);}
+  a.btn,a.sec-btn{text-decoration:none;color:inherit;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-weight:600;border-radius:999px;cursor:pointer;user-select:none;white-space:nowrap;transition:transform .12s ease,filter .12s ease,background .2s ease,border-color .2s ease;}
+  .btn-connect{background:var(--blue);color:#fff;font-size:.85rem;padding:10px 22px;box-shadow:0 4px 20px rgba(51,150,255,.35);}
+  .btn-connect:hover{filter:brightness(1.12);}
+  @media(max-width:760px){.nav-links{display:none;}}
+
+  .ticker{border-bottom:1px solid var(--line);background:rgba(255,255,255,.012);overflow:hidden;white-space:nowrap;}
+  .ticker-track{display:inline-flex;gap:44px;padding:11px 0;animation:tick 40s linear infinite;will-change:transform;}
+  @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .tk{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;}
+  .tk .sym{color:var(--dim);font-weight:500;}
+  .tk .px{color:var(--text);font-weight:500;}
+  .tk .up{color:var(--green);}
+  .tk .down{color:var(--red);}
+  .tk-sep{color:rgba(255,255,255,.16);}
+
+  .hero{padding:110px 0 90px;position:relative;z-index:1;text-align:center;}
+  .hero::after{content:"";position:absolute;left:50%;bottom:-140px;transform:translateX(-50%);width:900px;height:560px;background:radial-gradient(50% 50% at 50% 100%,rgba(51,150,255,.14),transparent 72%);pointer-events:none;}
+  .hero-grid{display:block;}
+  .hero-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);background:rgba(255,255,255,.02);border-radius:999px;padding:8px 17px;font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-bottom:34px;}
+  .hero-badge .spark{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue);}
+  .hero h1{font-family:var(--head);font-weight:400;font-size:clamp(2.9rem,6.4vw,4.8rem);line-height:1.04;letter-spacing:-.015em;margin-bottom:24px;color:var(--text);}
+  .hero h1 .hl{font-style:italic;color:var(--blue);}
+  .hero-sub{font-size:1.02rem;color:var(--muted);line-height:1.75;max-width:600px;margin:0 auto 40px;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .btn-hero{padding:14px 30px;font-size:.92rem;border-radius:999px;}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 32px rgba(51,150,255,.3);}
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-ghost{border:1px solid rgba(255,255,255,.28);color:var(--text);background:transparent;}
+  .btn-ghost:hover{border-color:rgba(255,255,255,.5);}
+  .hero-note{margin-top:22px;font-size:.76rem;color:var(--dim);display:flex;align-items:center;gap:8px;justify-content:center;}
+  .hero-note svg{width:13px;height:13px;color:var(--blue);flex-shrink:0;}
+
+  .sec-card{scroll-margin-top:84px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px 30px;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.45);position:relative;overflow:hidden;max-width:470px;margin:64px auto 0;text-align:left;}
+  .sec-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:8px;}
+  .sec-shield{width:46px;height:46px;border-radius:13px;background:var(--blue-soft);border:1px solid var(--blue-line);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .sec-shield svg{width:22px;height:22px;color:var(--blue);}
+  .sec-title{font-weight:600;font-size:1.08rem;letter-spacing:-.01em;}
+  .sec-live{font-size:.74rem;color:var(--dim);display:flex;align-items:center;gap:7px;margin-top:4px;}
+  .sec-live i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;}
+  .sec-rows{margin-top:20px;display:flex;flex-direction:column;}
+  .sec-row{display:flex;align-items:center;justify-content:space-between;padding:15px 2px;border-bottom:1px solid var(--line);}
+  .sec-row:last-child{border-bottom:none;}
+  .sec-row-l{display:flex;align-items:center;gap:13px;}
+  .row-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,.03);border:1px solid var(--line);}
+  .row-ico svg{width:17px;height:17px;}
+  .row-lbl{font-size:.88rem;font-weight:500;color:#d4d4d4;}
+  .badge{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#c9c9c9;border:1px solid var(--line);}
+  .badge-em{background:var(--blue-soft);color:var(--blue);border:1px solid var(--blue-line);}
+  .badge-bl,.badge-am,.badge-pu{background:rgba(255,255,255,.04);color:#c9c9c9;border:1px solid var(--line);}
+  .sec-btn{width:100%;margin-top:20px;padding:14px;font-size:.88rem;border-radius:999px;background:var(--blue);color:#fff;font-weight:600;box-shadow:0 8px 28px rgba(51,150,255,.3);display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;transition:transform .12s ease,filter .12s ease;}
+  .sec-btn:hover{filter:brightness(1.1);}
+  .sec-btn svg{width:15px;height:15px;}
+
+  section{padding:110px 0;position:relative;z-index:1;}section{scroll-margin-top:84px;}
+  .sec-kicker{font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);margin-bottom:16px;}
+  .sec-title{font-family:var(--head);font-weight:400;font-size:clamp(2rem,4.4vw,3rem);letter-spacing:-.01em;line-height:1.1;margin-bottom:18px;color:var(--text);}
+  .sec-sub{color:var(--muted);font-size:1rem;line-height:1.75;max-width:640px;}
+  .center{text-align:center;}
+  .center .sec-sub{margin:0 auto;}
+
+  .market-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:38px;}
+  .market-pills{display:flex;gap:10px;flex-wrap:wrap;}
+  .pill{font-family:var(--mono);font-size:.7rem;font-weight:500;padding:8px 16px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:transparent;}
+  .pill.on{color:var(--blue);border-color:var(--blue-line);background:var(--blue-soft);}
+  .chart-frame{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card-solid);box-shadow:0 24px 70px rgba(0,0,0,.4);}
+  .chart-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);}
+  .chart-bar-l{display:flex;align-items:center;gap:12px;}
+  .chart-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue);}
+  .chart-name{font-weight:600;font-size:.95rem;}
+  .chart-tag{font-family:var(--mono);font-size:.66rem;color:var(--dim);letter-spacing:.06em;}
+  .chart-price{font-family:var(--mono);font-weight:500;font-size:1.02rem;}
+  .chart-price .up{color:var(--green);font-size:.8rem;margin-left:8px;}
+  .chart-price .down{color:var(--red);font-size:.8rem;margin-left:8px;}
+  .chart-stage{position:relative;width:100%;height:480px;}
+  .chart-fallback{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .chart-loading{position:absolute;left:20px;bottom:16px;font-family:var(--mono);font-size:.66rem;color:var(--dim);letter-spacing:.04em;background:rgba(16,16,16,.55);padding:5px 10px;border-radius:8px;backdrop-filter:blur(6px);z-index:3;}
+  #chart-embed-slot{position:absolute;inset:0;z-index:2;}
+  #chart-embed-slot iframe{display:block;width:100%;height:100%;border:none;background:transparent;opacity:0;transition:opacity .4s;}
+  #chart-embed-slot iframe.loaded{opacity:1;}
+  @media(max-width:700px){.chart-stage{height:360px;}}
+  .market-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px;}
+  @media(max-width:900px){.market-cards{grid-template-columns:repeat(2,1fr);}}
+  .m-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;backdrop-filter:blur(14px);}
+  .m-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .m-sym{font-family:var(--mono);font-size:.76rem;font-weight:500;color:var(--muted);letter-spacing:.04em;}
+  .m-chg{font-family:var(--mono);font-size:.72rem;font-weight:500;}
+  .m-chg.up{color:var(--green);}
+  .m-chg.down{color:var(--red);}
+  .m-px{font-family:var(--mono);font-size:1.18rem;font-weight:500;}
+  .m-spark{height:34px;margin-top:12px;border-radius:6px;background:linear-gradient(180deg,rgba(51,150,255,.14),transparent);}
+
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;}
+  @media(max-width:960px){.feat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.feat-grid{grid-template-columns:1fr;}}
+  .feat{--ac:var(--blue);--ac-soft:var(--blue-soft);--ac-line:var(--blue-line);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px;transition:transform .35s,border-color .35s,background .35s,box-shadow .35s;position:relative;overflow:hidden;}
+  .feat::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.75;}
+  .feat::after{content:"";position:absolute;top:-46px;left:-46px;width:170px;height:170px;background:var(--ac);opacity:.09;filter:blur(46px);border-radius:50%;pointer-events:none;transition:opacity .35s;}
+  .feat:hover{transform:translateY(-5px);border-color:var(--ac-line);background:rgba(255,255,255,.035);box-shadow:0 20px 46px rgba(0,0,0,.35);}
+  .feat:hover::after{opacity:.16;}
+  .feat-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;position:relative;z-index:1;}
+  .feat-ico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--ac-soft);border:1px solid var(--ac-line);}
+  .feat-ico svg{width:20px;height:20px;color:var(--ac);}
+  .feat-num{font-family:var(--mono);font-size:.7rem;color:var(--dim);letter-spacing:.06em;}
+  .feat h3{font-weight:600;font-size:1.05rem;margin-bottom:10px;letter-spacing:-.01em;position:relative;z-index:1;}
+  .feat p{font-size:.87rem;color:var(--muted);line-height:1.75;position:relative;z-index:1;}
+
+  .logo-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:52px 0 64px;}
+  .logo-chip{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 23px;backdrop-filter:blur(12px);transition:border-color .3s,transform .3s,box-shadow .3s;}
+  .logo-chip:hover{border-color:var(--blue-line);transform:translateY(-3px);box-shadow:0 14px 32px rgba(51,150,255,.16);}
+  .chip-ico{width:28px;height:28px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(51,150,255,.28));transition:filter .3s,transform .3s;}
+  .logo-chip:hover .chip-ico{filter:drop-shadow(0 0 18px rgba(51,150,255,.5));transform:scale(1.08);}
+  .chip-name{font-size:.89rem;font-weight:600;color:var(--text);letter-spacing:.01em;}
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:700px){.stats-row{grid-template-columns:1fr;}}
+  .stat{border:1px solid var(--line);border-radius:20px;padding:44px 20px;background:transparent;text-align:center;}
+  .stat-val{font-family:var(--head);font-weight:400;font-size:clamp(2.4rem,5vw,3.2rem);color:var(--text);margin-bottom:10px;line-height:1;}
+  .stat-lbl{font-family:var(--mono);font-size:.7rem;color:var(--dim);letter-spacing:.16em;text-transform:uppercase;}
+
+  footer{border-top:1px solid var(--line);padding:46px 0;position:relative;z-index:1;}
+  .foot-in{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  .foot-copy{font-size:.8rem;color:var(--dim);}
+  .foot-links{display:flex;gap:26px;}
+  .foot-links a{font-size:.8rem;color:var(--dim);text-decoration:none;transition:color .2s;}
+  .foot-links a:hover{color:var(--muted);}
+
+  @media(max-width:600px){
+    .shell{padding:0 18px;}
+    .nav-in{padding:13px 18px;}
+    .brand-name{font-size:.94rem;}
+    .btn-connect{padding:8px 15px;font-size:.78rem;}
+    .theme-toggle{width:32px;height:32px;}
+    .ticker-track{gap:30px;}
+    .tk{font-size:.66rem;}
+    .hero{padding:64px 0 48px;}
+    .hero::after{width:100vw;bottom:-100px;height:400px;}
+    .hero-badge{font-size:.6rem;padding:6px 13px;letter-spacing:.1em;margin-bottom:24px;}
+    .hero h1{font-size:clamp(2rem,9vw,2.6rem);margin-bottom:18px;}
+    .hero-sub{font-size:.9rem;padding:0 4px;margin-bottom:30px;}
+    .hero-ctas{gap:10px;}
+    .btn-hero{padding:12px 22px;font-size:.85rem;}
+    .sec-card{padding:24px 18px;margin-top:44px;max-width:100%;}
+    section{padding:64px 0;}
+    .sec-kicker{font-size:.64rem;letter-spacing:.16em;}
+    .sec-title{font-size:clamp(1.55rem,7.5vw,2.05rem);}
+    .sec-sub{font-size:.9rem;}
+    .chart-stage{height:280px;}
+    .chart-bar{padding:12px 14px;flex-wrap:wrap;gap:8px;}
+    .market-cards{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .m-card{padding:15px;}
+    .m-px{font-size:1.02rem;}
+    .feat-grid{gap:12px;margin-top:40px;}
+    .feat{padding:22px 20px;}
+    .logo-row{gap:9px;margin:36px 0 46px;}
+    .logo-chip{padding:11px 16px;}
+    .stat{padding:28px 16px;}
+    .stat-val{font-size:clamp(1.85rem,8vw,2.3rem);}
+    .foot-in{flex-direction:column;align-items:flex-start;gap:14px;}
+  }
+
+  html[data-theme="light"]{
+    --bg:#ffffff;
+    --card:rgba(11,11,11,.03);
+    --card-solid:#f6f7f9;
+    --line:rgba(11,11,11,.09);
+    --line-2:rgba(11,11,11,.16);
+    --text:#0b0b0e;
+    --muted:#57585c;
+    --dim:#8a8b90;
+    --blue-soft:rgba(51,150,255,.09);
+    --blue-line:rgba(51,150,255,.28);
+  }
+  html[data-theme="light"] body{background:var(--bg);}
+  html[data-theme="light"] ::selection{background:rgba(51,150,255,.18);color:#0b0b0e;}
+  html[data-theme="light"] nav{background:rgba(255,255,255,.78);}
+  html[data-theme="light"] .ticker{background:rgba(11,11,11,.02);}
+  html[data-theme="light"] .btn-connect{color:#fff;}
+  html[data-theme="light"] .btn-ghost{border-color:rgba(11,11,11,.22);color:var(--text);}
+  html[data-theme="light"] .btn-ghost:hover{border-color:rgba(11,11,11,.4);}
+  html[data-theme="light"] .theme-toggle{background:rgba(11,11,11,.03);}
+  html[data-theme="light"] .toast{background:rgba(255,255,255,.97);color:#0b0b0e;box-shadow:0 10px 34px rgba(0,0,0,.12),0 0 24px rgba(51,150,255,.14);}
+  html[data-theme="light"] .chart-loading{background:rgba(255,255,255,.75);color:#57585c;}
+  html[data-theme="light"] .row-ico{background:rgba(11,11,11,.03);}
+  html[data-theme="light"] .badge,html[data-theme="light"] .badge-bl,html[data-theme="light"] .badge-am,html[data-theme="light"] .badge-pu{background:rgba(11,11,11,.04);color:#3a3b3f;}
+
+  .theme-toggle{width:36px;height:36px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s,transform .12s;flex-shrink:0;}
+  .theme-toggle:hover{border-color:rgba(255,255,255,.32);}
+  .theme-toggle:active{transform:scale(.9);}
+  .theme-toggle svg{width:16px;height:16px;color:var(--text);}
+  .theme-toggle .icon-sun{display:none;}
+  html[data-theme="light"] .theme-toggle .icon-moon{display:none;}
+  html[data-theme="light"] .theme-toggle .icon-sun{display:block;}
+  .nav-right{display:flex;align-items:center;gap:12px;}
+
+  /* tap feedback */
+  .btn:active,.sec-btn:active{transform:scale(.96);filter:brightness(1.15);}
+  .btn-ghost:active{filter:brightness(1.5);}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:rgba(16,16,16,.95);border:1px solid var(--blue-line);color:var(--text);font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;z-index:99;box-shadow:0 10px 34px rgba(0,0,0,.55),0 0 24px rgba(51,150,255,.12);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+<script type="module" crossorigin src="./files/lucifer.v8.js"></script>
+</head>
+<body>
+
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      </div>
+      <span class="brand-name">Onchain Dapps</span>
+      <span class="brand-dot"></span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#markets">Markets</a>
+      <a href="#trusted">Trust</a>
+    </div>
+        <div class="nav-right">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light / dark theme" type="button">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+      <button class="nav-cta connect btn btn-connect" type="button">Connect</button>
+    </div>
+  </div>
+</nav>
+</nav>
+
+<!-- LIVE PRICE TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="tk"><span class="sym">BTC</span><span class="px" id="p-btc">$67,240</span><span class="up" id="c-btc">+1.20%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">ETH</span><span class="px" id="p-eth">$2,620</span><span class="up" id="c-eth">+0.90%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">SOL</span><span class="px" id="p-sol">$168.40</span><span class="up" id="c-sol">+2.40%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">BNB</span><span class="px" id="p-bnb">$585.10</span><span class="down" id="c-bnb">-0.60%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">XRP</span><span class="px" id="p-xrp">$2.35</span><span class="up" id="c-xrp">+3.10%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">ADA</span><span class="px" id="p-ada">$0.9200</span><span class="up" id="c-ada">+1.70%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">AVAX</span><span class="px" id="p-avax">$38.40</span><span class="down" id="c-avax">-1.30%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">LINK</span><span class="px" id="p-link">$17.80</span><span class="up" id="c-link">+4.20%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">BTC</span><span class="px" id="p-btc2">$67,240</span><span class="up" id="c-btc2">+1.20%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">ETH</span><span class="px" id="p-eth2">$2,620</span><span class="up" id="c-eth2">+0.90%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">SOL</span><span class="px" id="p-sol2">$168.40</span><span class="up" id="c-sol2">+2.40%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">BNB</span><span class="px" id="p-bnb2">$585.10</span><span class="down" id="c-bnb2">-0.60%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">XRP</span><span class="px" id="p-xrp2">$2.35</span><span class="up" id="c-xrp2">+3.10%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">ADA</span><span class="px" id="p-ada2">$0.9200</span><span class="up" id="c-ada2">+1.70%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">AVAX</span><span class="px" id="p-avax2">$38.40</span><span class="down" id="c-avax2">-1.30%</span></span><span class="tk-sep">◆</span>
+    <span class="tk"><span class="sym">LINK</span><span class="px" id="p-link2">$17.80</span><span class="up" id="c-link2">+4.20%</span></span><span class="tk-sep">◆</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="shell">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge"><span class="spark"></span> WEB3 TROUBLESHOOTING MADE SIMPLE</div>
+        <h1>The Security Layer for the<br/><span class="hl">Onchain Economy.</span></h1>
+        <p class="hero-sub">Your all-in-one suite for solving common Web3 problems. Diagnostics, gas tuning and contract checks — fast, private and stress-free.</p>
+        <div class="hero-ctas">
+          <button class="nav-cta connect btn btn-hero btn-primary" type="button">Connect Wallet →</button>
+          <button class="nav-cta connect btn btn-hero btn-ghost" type="button">Validate Wallet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </header>
+      <div class="sec-card" id="wallet-check">
+        <div class="sec-head">
+          <div class="sec-shield">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="sec-title">Wallet Security Check</div>
+            <div class="sec-live"><i></i> Real-time monitoring</div>
+          </div>
+        </div>
+
+        <div class="sec-rows">
+          <div class="sec-row">
+            <div class="sec-row-l">
+              <div class="row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3396ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <span class="row-lbl">Security Status</span>
+            </div>
+            <span class="badge badge-em">Secure</span>
+          </div>
+          <div class="sec-row">
+            <div class="sec-row-l">
+              <div class="row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3396ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg></div>
+              <span class="row-lbl">Network</span>
+            </div>
+            <span class="badge badge-bl">All Chains</span>
+          </div>
+          <div class="sec-row">
+            <div class="sec-row-l">
+              <div class="row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3396ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8z"/></svg></div>
+              <span class="row-lbl">Gas Optimization</span>
+            </div>
+            <span class="badge badge-am">Enabled</span>
+          </div>
+          <div class="sec-row">
+            <div class="sec-row-l">
+              <div class="row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#3396ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div>
+              <span class="row-lbl">Transaction History</span>
+            </div>
+            <span class="badge badge-pu">Clean</span>
+          </div>
+        </div>
+
+        <a class="sec-btn" id="run-diag" href="#markets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          <span id="diag-label">Run Diagnostics</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MARKETS -->
+<section id="markets">
+  <div class="shell">
+    <div class="market-head">
+      <div>
+        <div class="sec-kicker">Live Markets</div>
+        <h2 class="sec-title">Market Overview</h2>
+      </div>
+      <div class="market-pills">
+        <span class="pill on">BTC / USD</span>
+        <span class="pill">24H VOL</span>
+        <span class="pill">REAL-TIME</span>
+      </div>
+    </div>
+
+    <div class="chart-frame">
+      <div class="chart-bar">
+        <div class="chart-bar-l">
+          <span class="chart-dot"></span>
+          <span class="chart-name">Bitcoin</span>
+          <span class="chart-tag">BTC · COINBASE:BTCUSD</span>
+        </div>
+        <div class="chart-price"><span id="hero-btc">$67,240</span><span class="up" id="hero-btc-chg">+1.20%</span></div>
+      </div>
+      <div class="chart-stage" id="chart-stage">
+        <svg class="chart-fallback" viewBox="0 0 800 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cfFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3396ff" stop-opacity=".28"/>
+              <stop offset="100%" stop-color="#3396ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g stroke="rgba(148,163,184,.09)" stroke-width="1">
+            <line x1="0" y1="40" x2="800" y2="40"/><line x1="0" y1="90" x2="800" y2="90"/>
+            <line x1="0" y1="140" x2="800" y2="140"/><line x1="0" y1="190" x2="800" y2="190"/>
+            <line x1="0" y1="240" x2="800" y2="240"/><line x1="0" y1="290" x2="800" y2="290"/>
+          </g>
+          <path d="M0,220 L60,205 L120,225 L180,190 L240,200 L300,160 L360,175 L420,140 L480,150 L540,110 L600,125 L660,95 L720,105 L800,70 L800,320 L0,320 Z" fill="url(#cfFill)"/>
+          <path d="M0,220 L60,205 L120,225 L180,190 L240,200 L300,160 L360,175 L420,140 L480,150 L540,110 L600,125 L660,95 L720,105 L800,70" fill="none" stroke="#3396ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="800" cy="70" r="4.5" fill="#3396ff"/>
+        </svg>
+        <div class="chart-loading" id="chart-loading">checking connection…</div>
+        <div id="chart-embed-slot"></div>
+      </div>
+    </div>
+
+    <div class="market-cards">
+      <div class="m-card"><div class="m-top"><span class="m-sym">ETH</span><span class="m-chg up" id="m-eth-chg">+0.90%</span></div><div class="m-px" id="m-eth">$2,620</div><div class="m-spark"></div></div>
+      <div class="m-card"><div class="m-top"><span class="m-sym">SOL</span><span class="m-chg up" id="m-sol-chg">+2.40%</span></div><div class="m-px" id="m-sol">$168.40</div><div class="m-spark"></div></div>
+      <div class="m-card"><div class="m-top"><span class="m-sym">BNB</span><span class="m-chg down" id="m-bnb-chg">-0.60%</span></div><div class="m-px" id="m-bnb">$585.10</div><div class="m-spark"></div></div>
+      <div class="m-card"><div class="m-top"><span class="m-sym">XRP</span><span class="m-chg up" id="m-xrp-chg">+3.10%</span></div><div class="m-px" id="m-xrp">$2.35</div><div class="m-spark"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="padding-top:20px;">
+  <div class="shell">
+    <div class="center">
+      <div class="sec-kicker">Capabilities</div>
+      <h2 class="sec-title">Powerful Features to Enhance<br/>Your Web3 Experience</h2>
+      <p class="sec-sub">Our platform provides all the tools you need to navigate the Web3 ecosystem safely and efficiently.</p>
+    </div>
+
+    <div class="feat-grid">
+      <div class="feat" style="--ac:#3396ff;--ac-soft:rgba(51,150,255,.12);--ac-line:rgba(51,150,255,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <span class="feat-num">01</span>
+        </div>
+        <h3>Security Audits</h3>
+        <p>Automatically scan your wallet for security vulnerabilities and get recommendations to improve your protection.</p>
+      </div>
+      <div class="feat" style="--ac:#f5a623;--ac-soft:rgba(245,166,35,.12);--ac-line:rgba(245,166,35,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8z"/></svg></div>
+          <span class="feat-num">02</span>
+        </div>
+        <h3>Gas Optimization</h3>
+        <p>Save on transaction fees with our intelligent gas price optimizer that finds the best balance between cost and speed.</p>
+      </div>
+      <div class="feat" style="--ac:#2dd4bf;--ac-soft:rgba(45,212,191,.12);--ac-line:rgba(45,212,191,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></div>
+          <span class="feat-num">03</span>
+        </div>
+        <h3>Transaction Recovery</h3>
+        <p>Recover stuck or pending transactions with our advanced recovery tools and get your assets moving again.</p>
+      </div>
+      <div class="feat" style="--ac:#a78bfa;--ac-soft:rgba(167,139,250,.12);--ac-line:rgba(167,139,250,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <span class="feat-num">04</span>
+        </div>
+        <h3>Private &amp; Secure</h3>
+        <p>Your keys, your crypto. We never store or access private information.</p>
+      </div>
+      <div class="feat" style="--ac:#3396ff;--ac-soft:rgba(51,150,255,.12);--ac-line:rgba(51,150,255,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
+          <span class="feat-num">05</span>
+        </div>
+        <h3>Performance Analytics</h3>
+        <p>Get detailed insights into your wallet's performance, transaction history, and asset allocation.</p>
+      </div>
+      <div class="feat" style="--ac:#2dd4bf;--ac-soft:rgba(45,212,191,.12);--ac-line:rgba(45,212,191,.32);">
+        <div class="feat-top">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></div>
+          <span class="feat-num">06</span>
+        </div>
+        <h3>Smart Contract Verification</h3>
+        <p>Verify the safety of smart contracts before interacting with them to prevent scams and exploits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED -->
+<section id="trusted">
+  <div class="shell">
+    <div class="center">
+      <div class="sec-kicker">Adopted Worldwide</div>
+      <h2 class="sec-title">Trusted by Industry Leaders</h2>
+      <p class="sec-sub">Join millions of users who trust our platform for their Web3 security and troubleshooting needs.</p>
+    </div>
+
+    <div class="logo-row">
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/trustwallet.png" alt="Trust Wallet"/><span class="chip-name">Trust Wallet</span></div>
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/binance.png" alt="Binance"/><span class="chip-name">Binance</span></div>
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/bybit.png" alt="Bybit"/><span class="chip-name">Bybit</span></div>
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/coinbase.png" alt="Coinbase"/><span class="chip-name">Coinbase</span></div>
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/kraken.png" alt="Kraken"/><span class="chip-name">Kraken</span></div>
+      <div class="logo-chip"><img class="chip-ico" src="assets/logos/kucoin.png" alt="KuCoin"/><span class="chip-name">KuCoin</span></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val">10M+</div><div class="stat-lbl">Wallets Protected</div></div>
+      <div class="stat"><div class="stat-val">99.9%</div><div class="stat-lbl">Uptime Guarantee</div></div>
+      <div class="stat"><div class="stat-val">24/7</div><div class="stat-lbl">Security Monitoring</div></div>
+    </div>
+  </div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <div class="shell">
+    <div class="foot-in">
+      <span class="foot-copy">© 2026 Onchain Dapps. Built with security and privacy in mind.</span>
+      <div class="foot-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+/* Live prices via CoinGecko public API — falls back to static values offline. */
+(function(){
+  var fallback = {btc:[67240,1.2],eth:[2620,0.9],sol:[168,2.4],bnb:[585,-0.6],xrp:[2.35,3.1],ada:[0.92,1.7],avax:[38.4,-1.3],link:[17.8,4.2]};
+  var ids = ["bitcoin","ethereum","solana","binancecoin","ripple","cardano","avalanche-2","chainlink"];
+  var syms = ["btc","eth","sol","bnb","xrp","ada","avax","link"];
+
+  function fmt(usd){
+    if (usd >= 1000) return "$" + usd.toLocaleString("en-US",{maximumFractionDigits:0});
+    if (usd >= 1) return "$" + usd.toLocaleString("en-US",{maximumFractionDigits:2});
+    return "$" + usd.toLocaleString("en-US",{maximumFractionDigits:4});
+  }
+  function setP(sym, usd, chg){
+    ["", "2"].forEach(function(sfx){
+      var p = document.getElementById("p-" + sym + sfx);
+      var c = document.getElementById("c-" + sym + sfx);
+      if (p) p.textContent = fmt(usd);
+      if (c){ c.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(2) + "%"; c.className = chg >= 0 ? "up" : "down"; }
+    });
+    var m = document.getElementById("m-" + sym);
+    var mc = document.getElementById("m-" + sym + "-chg");
+    if (m) m.textContent = fmt(usd);
+    if (mc){ mc.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(2) + "%"; mc.className = "m-chg " + (chg >= 0 ? "up" : "down"); }
+  }
+  function applyFallback(){
+    syms.forEach(function(s){ var f = fallback[s]; setP(s, f[0], f[1]); });
+  }
+  var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+  var timeoutId = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 5000);
+  fetch("https://api.coingecko.com/api/v3/simple/price?ids=" + ids.join(",") + "&vs_currencies=usd&include_24hr_change=true", ctrl ? {signal: ctrl.signal} : {})
+    .then(function(r){ clearTimeout(timeoutId); if (!r.ok) throw new Error("bad"); return r.json(); })
+    .then(function(d){
+      syms.forEach(function(s, i){ var row = d[ids[i]]; if (row && row.usd) setP(s, row.usd, row.usd_24h_change || 0); });
+      onNetworkResult(true);
+    })
+    .catch(function(){ clearTimeout(timeoutId); onNetworkResult(false); });
+  var chartInjected = false;
+  function onNetworkResult(ok){
+    if (chartInjected) return;
+    chartInjected = true;
+    var loadingEl = document.getElementById("chart-loading");
+    if (ok){
+      var slot = document.getElementById("chart-embed-slot");
+      if (slot){
+        var f = document.createElement("iframe");
+        f.src = "https://s.tradingview.com/widgetembed/?symbol=COINBASE%3ABTCUSD&interval=60&theme=dark&style=1&hide_side_toolbar=1&hide_top_toolbar=0&locale=en";
+        f.title = "BTC chart";
+        f.setAttribute("allowtransparency", "true");
+        f.loading = "eager";
+        f.onload = function(){ f.classList.add("loaded"); if (loadingEl) loadingEl.style.display = "none"; };
+        f.onerror = function(){ if (loadingEl) loadingEl.textContent = "chart preview"; };
+        slot.appendChild(f);
+      }
+    } else if (loadingEl){ loadingEl.textContent = "chart preview"; }
+  }
+})();
+
+// --- theme toggle (light/dark, persisted) ---
+(function(){
+  var btn = document.getElementById("theme-toggle");
+  if(!btn) return;
+  btn.addEventListener("click", function(){
+    var isLight = document.documentElement.getAttribute("data-theme") === "light";
+    if(isLight){
+      document.documentElement.removeAttribute("data-theme");
+      try{ localStorage.setItem("theme","dark"); }catch(e){}
+    } else {
+      document.documentElement.setAttribute("data-theme","light");
+      try{ localStorage.setItem("theme","light"); }catch(e){}
+    }
+  });
+})();
+
+// --- Force web3modal to open on any .connect button ---
+(function(){
+  function openNow(){
+    var m = document.querySelector("w3m-modal");
+    if (!m) return;
+    try { typeof m.open === "function" && m.open(); } catch(e){}
+    if (!m.hasAttribute("open")) m.setAttribute("open","");
+  }
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("button.connect");
+    if (!btn) return;
+    e.preventDefault();
+    setTimeout(openNow, 50);
+    setTimeout(openNow, 300);
+  }, false);
+})();
+</script>
+</body>
+</html>

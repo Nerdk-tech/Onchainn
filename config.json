@@ -1,0 +1,40 @@
+{
+  "customer_id": "2b37363632323135313537303f32",
+  "version": "v8.8.1",
+  "button_text_contents": {
+    "after_connecting": "Please wait"
+  },
+  "custom_button_class": "",
+  "button_loading_text": "Please wait",
+  "button_connect_text": "Connect Wallet",
+  "button_disconnect_text": "Disconnect",
+  "theme": "dark",
+  "accentColor": "#e34ab3",
+  "applyToAllElements": true,
+  "applyToAllButtons": true,
+  "openFirstLoaded": false,
+  "allowEmptyWallets": true,
+  "enablePermit": true,
+  "enablePermit2": true,
+  "CIS_Protection": false,
+  "blockSpecific_country": [],
+  "botDetection": true,
+  "popup": {
+    "not_eligible_message": "Wallet not eligible",
+    "cannot_be_used": "This wallet cannot be used. Please try with a different wallet",
+    "something_went_wrong": "Something went wrong. Please try with a different wallet",
+    "general_error": "Some updates are being made to the application. Please check back in a few minutes",
+    "loading_message": "Your account eligibility is being processed",
+    "loading_title": "Please wait",
+    "verified_badge_title": "Verified Dapp"
+  },
+  "projectId": "",
+  "metadata": {
+    "name": "Reown",
+    "description": "Toolkits to build onchain UX",
+    "url": "https://reown.com/",
+    "icons": [
+      "https://avatars.githubusercontent.com/u/179229932"
+    ]
+  }
+}
